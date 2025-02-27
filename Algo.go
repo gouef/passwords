@@ -1,6 +1,9 @@
 package passwords
 
-import "golang.org/x/crypto/bcrypt"
+import (
+	"golang.org/x/crypto/bcrypt"
+	"strconv"
+)
 
 type Algo interface {
 	Hash(password string) (string, error)
@@ -13,9 +16,22 @@ const (
 	BCRYPT AlgoType = "Bcrypt"
 )
 
-func (a AlgoType) New() *Algo {
+func (a AlgoType) New(options map[string]any) Algo {
 	switch a {
 	case BCRYPT:
+		c, exists := options["cost"]
+
+		if exists {
+			switch cost := c.(type) {
+			case int:
+				return &Bcrypt{Cost: cost}
+			case string:
+				cc, _ := strconv.Atoi(cost)
+				return &Bcrypt{Cost: cc}
+			}
+		}
+		return &Bcrypt{Cost: bcrypt.DefaultCost}
+	default:
 		return &Bcrypt{Cost: bcrypt.DefaultCost}
 	}
 }
@@ -24,8 +40,11 @@ type Bcrypt struct {
 	Cost int
 }
 
-func NewBcrypt() *Bcrypt {
-	return &Bcrypt{Cost: bcrypt.DefaultCost}
+func NewBcrypt(cost int) *Bcrypt {
+	if cost <= 0 {
+		cost = bcrypt.DefaultCost
+	}
+	return &Bcrypt{Cost: cost}
 }
 
 func (p *Bcrypt) Hash(password string) (string, error) {
