@@ -1,19 +1,43 @@
 package passwords
 
-type Passwords struct {
-	Algo    Algo
-	Options map[string]any
+import (
+	"github.com/gouef/passwords/argon"
+	"github.com/gouef/passwords/bcrypt"
+)
+
+type AlgoType string
+
+var (
+	BCRYPT AlgoType = "Bcrypt"
+	ARGON  AlgoType = "Argon"
+)
+
+var Algo AlgoType = ARGON
+
+func Use(algo AlgoType) {
+	Algo = algo
 }
 
-func NewPassword(algoType AlgoType, options map[string]any) *Passwords {
-	algo := algoType.New(options)
-	return &Passwords{Algo: algo}
+func Default() {
+	if Algo == ARGON {
+		argon.Default()
+	} else if Algo == BCRYPT {
+		bcrypt.Default()
+	}
 }
 
-func (p *Passwords) Hash(password string) (string, error) {
+func Hash(password string) (string, error) {
+	if Algo == BCRYPT {
+		return bcrypt.Hash(password)
+	}
 
+	return argon.Hash(password)
 }
 
-func (p *Passwords) Verify(password, hash string) bool {
+func Verify(password, hash string) bool {
+	if Algo == BCRYPT {
+		return bcrypt.Verify(password, hash)
+	}
 
+	return argon.Verify(password, hash)
 }
