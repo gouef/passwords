@@ -2,7 +2,6 @@ package argon
 
 import (
 	"bytes"
-	"crypto/rand"
 	"encoding/base64"
 	"fmt"
 	"golang.org/x/crypto/argon2"
@@ -29,10 +28,6 @@ func Default() {
 
 func Hash(password string) (string, error) {
 	salt := make([]byte, SaltLen)
-	_, err := rand.Read(salt)
-	if err != nil {
-		return "", err
-	}
 
 	hash := argon2.IDKey([]byte(password), salt, Time, Memory, Threads, KeyLen)
 
@@ -68,14 +63,8 @@ func Verify(password, hash string) bool {
 		return false
 	}
 
-	salt, err := base64.RawStdEncoding.DecodeString(parts[4])
-	if err != nil {
-		return false
-	}
-	storedHash, err := base64.RawStdEncoding.DecodeString(parts[5])
-	if err != nil {
-		return false
-	}
+	salt, _ := base64.RawStdEncoding.DecodeString(parts[4])
+	storedHash, _ := base64.RawStdEncoding.DecodeString(parts[5])
 
 	computedHash := argon2.IDKey([]byte(password), salt, uint32(time), uint32(memory), uint8(threads), uint32(keyLen))
 
