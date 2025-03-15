@@ -1,7 +1,7 @@
 <img align=right width="168" src="docs/gouef_logo.png">
 
-# passwords
-Password hashing
+# Passwords
+The `passwords` package provides functions for hashing and verifying passwords using the Argon2id and bcrypt algorithms. It allows switching between these algorithms using a global variable.
 
 [![Static Badge](https://img.shields.io/badge/Github-gouef%2Fpasswords-blue?style=for-the-badge&logo=github&link=github.com%2Fgouef%2Fpasswords)](https://github.com/gouef/passwords)
 
@@ -15,15 +15,14 @@ Password hashing
 ![GitHub Release](https://img.shields.io/github/v/release/gouef/passwords?label=RC&include_prereleases&filter=*rc*&logoSize=diago)
 ![GitHub Release](https://img.shields.io/github/v/release/gouef/passwords?label=Beta&include_prereleases&filter=*beta*&logoSize=diago)
 
+## Installation
 
-## Introduction
+```sh
+ go get -u github.com/gouef/passwords
+```
 
-This is template repository for new libraries
-
-## Important
-
-- Edit go.mod and rename to your package module
-- Uncomment .github/workflows/tests.yml
+## Documentation
+You can found documentation for [Passwords](./docs/passwords.md), [Bcrypt](./docs/Bcrypt.md) and [Argon](./docs/Argon.md).
 
 ## Contributing
 
