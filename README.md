@@ -24,6 +24,30 @@ The `passwords` package provides functions for hashing and verifying passwords u
 ## Documentation
 You can found documentation for [Passwords](./docs/passwords.md), [Bcrypt](./docs/Bcrypt.md) and [Argon](./docs/Argon.md).
 
+### Simplify usage
+```go
+package main
+
+import (
+    "fmt"
+    "github.com/gouef/passwords"
+)
+
+func main() {
+    passwords.Use(passwords.ARGON) // Use Argon2id
+    hash, err := passwords.Hash("mypassword")
+    if err != nil {
+        fmt.Println("Error hashing password:", err)
+        return
+    }
+
+    fmt.Println("Hash:", hash)
+    
+    isValid := passwords.Verify("mypassword", hash)
+    fmt.Println("Verification:", isValid)
+}
+```
+
 ## Contributing
 
 Read [Contributing](CONTRIBUTING.md)
